@@ -158,7 +158,7 @@ function AdminSidebar({
 export default function Navbar() {
   const pathname = usePathname();
   const { authenticated, email, name } = useAuthStore();
-  const { isLoading, setLoading } = useLoadingStore();
+  const setLoading = useLoadingStore((s) => s.setLoading);
   const [isOpen, setIsOpen] = React.useState(false);
   const [isAdminOpen, setIsAdminOpen] = React.useState(false);
   const [pastHero, setPastHero] = React.useState(false);
@@ -247,10 +247,10 @@ export default function Navbar() {
     <>
       <nav
         ref={navRef}
-        className={`sticky top-0 z-30 pt-5 px-5 ${lexend.className} ${pathname === "/" && !pastHero && !isLoading ? "bg-black" : "bg-transparent"}`}
+        className={`sticky top-0 z-30 pt-5 px-4 sm:px-8 ${lexend.className}`}
       >
-        <div className="relative bg-pbgray rounded-4xl text-white">
-          <div className="mx-auto pl-12 pr-5">
+        <div className={`relative rounded-4xl text-white border border-white/5 ${pathname === "/" && !pastHero ? "bg-[#050b0b]/85" : "bg-pbgray"}`}>
+          <div className="mx-auto pl-9 sm:pl-12 pr-4 sm:pr-5">
             <div className="flex items-center justify-between h-16">
               <Link href={"/"} className="flex items-center">
                 <Image
@@ -261,8 +261,8 @@ export default function Navbar() {
                   loading="eager"
                 />
               </Link>
-              <div className="hidden lg:flex items-center gap-2">
-                <div className="ml-10 flex items-baseline space-x-4">
+              <div className="hidden xl:flex items-center gap-2">
+                <div className="ml-6 flex items-baseline space-x-1 2xl:space-x-4">
                   {pages.map((page) => (
                     <Link
                       key={page.name}
@@ -294,7 +294,7 @@ export default function Navbar() {
                 )}
               </div>
 
-              <div className="lg:hidden flex items-center gap-2">
+              <div className="xl:hidden flex items-center gap-2">
                 {authenticated && (
                   <button
                     onClick={() => setIsAdminOpen(true)}
@@ -315,6 +315,8 @@ export default function Navbar() {
                   onClick={() => setIsOpen(!isOpen)}
                   className="bg-pbgreen text-black rounded-full w-10 h-10 flex items-center justify-center transition-all"
                   aria-label="Toggle menu"
+                  aria-expanded={isOpen}
+                  aria-controls="main-navigation-menu"
                 >
                   {isOpen ? (
                     <svg
@@ -345,7 +347,9 @@ export default function Navbar() {
           </div>
 
           <div
-            className={`lg:hidden absolute left-0 right-0 top-full mt-2 bg-pbgray rounded-2xl overflow-hidden transition-all duration-200 ${
+            id="main-navigation-menu"
+            inert={!isOpen}
+            className={`xl:hidden absolute left-0 right-0 top-full mt-2 bg-pbgray rounded-2xl overflow-hidden transition-all duration-200 ${
               isOpen
                 ? "opacity-100 translate-y-0 pointer-events-auto"
                 : "opacity-0 -translate-y-2 pointer-events-none"

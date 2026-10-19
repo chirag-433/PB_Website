@@ -1,0 +1,137 @@
+@property --lp { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --breath { syntax: "<number>"; inherits: false; initial-value: .3; }
+@property --ring { syntax: "<number>"; inherits: false; initial-value: 0; }
+@property --ring-p { syntax: "<number>"; inherits: false; initial-value: 0; }
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: max(780px, 100svh);
+  margin-top: -86px;
+  touch-action: pan-y pinch-zoom;
+  color: white;
+  background: #030909;
+  view-timeline: --hero block;
+  transition: --lp .3s;
+}
+.scene { position: absolute; inset: 0; z-index: -4; pointer-events: none; user-select: none; container-type: size; }
+.frame {
+  position: absolute; left: -1.5cqw; bottom: -2.5%; height: min(102.5cqh, 75cqw); aspect-ratio: 1672 / 941;
+  --th: min(61.65cqh, 45.11cqw); --disc-r: calc(var(--th) * .77);
+}
+@keyframes glass { 0%, 100% { opacity: .75; } 10% { opacity: .49; } 20% { opacity: .33; } 40% { opacity: .18; } 60% { opacity: .12; } 80% { opacity: .255; } 90% { opacity: .465; } }
+@keyframes charge { 0%, 100% { opacity: .7; } 10% { opacity: .455; } 20% { opacity: .308; } 40% { opacity: .168; } 60% { opacity: .112; } 80% { opacity: .238; } 90% { opacity: .434; } }
+@keyframes pulse {
+  0% { --breath: 1; --ring: 0; --ring-p: 0; }
+  5% { --breath: .825; --ring: .613; --ring-p: .131; }
+  10% { --breath: .65; --ring: .963; --ring-p: .253; }
+  15% { --breath: .545; --ring: .922; --ring-p: .362; }
+  20% { --breath: .44; --ring: .88; --ring-p: .47; }
+  25% { --breath: .39; --ring: .833; --ring-p: .547; }
+  30% { --breath: .34; --ring: .785; --ring-p: .625; }
+  35% { --breath: .29; --ring: .737; --ring-p: .703; }
+  40% { --breath: .24; --ring: .69; --ring-p: .78; }
+  45% { --breath: .22; --ring: .63; --ring-p: .823; }
+  50% { --breath: .2; --ring: .57; --ring-p: .865; }
+  55% { --breath: .18; --ring: .51; --ring-p: .907; }
+  60% { --breath: .16; --ring: .45; --ring-p: .95; }
+  65% { --breath: .205; --ring: .371; --ring-p: .962; }
+  70% { --breath: .25; --ring: .292; --ring-p: .975; }
+  75% { --breath: .295; --ring: .163; --ring-p: .988; }
+  80% { --breath: .34; --ring: 0; --ring-p: 1; }
+  85% { --breath: .48; --ring: 0; --ring-p: 1; }
+  90% { --breath: .62; --ring: 0; --ring-p: 1; }
+  95% { --breath: .81; --ring: 0; --ring-p: 1; }
+  100% { --breath: 1; --ring: 0; --ring-p: 1; }
+}
+
+.layer { position: absolute; will-change: transform; }
+.hero [data-drift] { transition: transform .8s cubic-bezier(.2, .8, .2, 1); }
+.layer img { display: block; width: 100%; height: auto; }
+
+.ridge { --scroll: 220px; --cx: 52.1%; --cy: 40.4%; z-index: 1; left: -19.6%; bottom: -32.9%; width: 91.2%; rotate: .8deg; opacity: .7; }
+.columns { --scroll: 170px; --cx: calc(-21% - max(0px, 101.5cqw - 182.1cqh)); --cy: -2.2%; z-index: 2; left: calc(40% + max(0px, 101.5cqw - 182.1cqh)); bottom: -13.4%; width: 57.6%; rotate: .4deg; opacity: .88; }
+.fogBack { --scroll: 150px; z-index: 3; opacity: .79; }
+.trophy { --scroll: 100px; z-index: 4; left: 18.48%; top: 14.77%; height: 60.15%; }
+.trophy img { width: auto; height: 100%; }
+.cliff { --scroll: 80px; --cx: 56.3%; --cy: 25.5%; z-index: 5; left: -35.88%; bottom: 0; width: 113.28%; }
+.fogFront { --scroll: 30px; z-index: 7; opacity: .85; }
+.hero [data-parallax] {
+  animation: parallax linear both;
+  animation-timeline: --hero;
+  animation-range: exit-crossing 0% exit-crossing 100%;
+}
+@keyframes parallax { from { translate: 0 0; } to { translate: 0 var(--scroll); } }
+.fogBack, .fogFront { position: absolute; left: -4%; top: -4%; width: 108%; height: 108%; pointer-events: none; }
+
+.crackGlow, .crackPulse { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; mix-blend-mode: screen; }
+.crackGlow {
+  --spot: radial-gradient(circle 12vw at var(--lx, -999px) var(--ly, -999px),
+    rgb(0 0 0 / var(--lp, 0)), rgb(0 0 0 / calc(var(--lp, 0) * .55)) 28.2%, transparent 47%);
+  mask-image: var(--spot); -webkit-mask-image: var(--spot);
+}
+.crackPulse {
+  --r: calc(var(--th) * 2.2 * var(--ring-p) + 1px);
+  --disc: radial-gradient(circle var(--disc-r) at var(--cx) var(--cy),
+    rgb(0 0 0 / calc(var(--breath) * .8)) 25%, rgb(0 0 0 / calc(var(--breath) * .36)) 60%, transparent);
+  --wave: radial-gradient(circle var(--r) at var(--cx) var(--cy),
+    transparent calc(var(--r) - var(--th) * .45), rgb(0 0 0 / var(--ring)) calc(var(--r) - var(--th) * .135), transparent);
+  mask-image: var(--disc), var(--wave); -webkit-mask-image: var(--disc), var(--wave);
+  will-change: transform; animation: pulse 5s steps(6) infinite;
+}
+
+.charge {
+  position: absolute; inset: -12% -45% -6%; pointer-events: none; mix-blend-mode: screen;
+  opacity: .21; will-change: opacity; animation: charge 5s linear infinite;
+  background: radial-gradient(ellipse 34% 46% at 50% 55%, rgb(32 255 0 / .32), transparent 72%),
+    radial-gradient(ellipse 42% 9% at 50% 93%, rgb(32 255 0 / .55), transparent 75%);
+}
+.glass {
+  position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
+  opacity: .225; will-change: opacity; animation: glass 5s linear infinite;
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  background: radial-gradient(ellipse 70% 30% at 50% 100%, rgb(32 255 0 / .4), transparent),
+    linear-gradient(90deg, rgb(32 255 0 / .42), rgb(32 255 0 / .07) 22%, rgb(32 255 0 / .07) 78%, rgb(32 255 0 / .42));
+}
+
+.scrim { position: absolute; inset: 0; z-index: -3; pointer-events: none; background: linear-gradient(180deg, #03090944, transparent 22%, transparent 80%, #030909 100%); }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 140px; z-index: -2; pointer-events: none; background: linear-gradient(180deg, #1110, var(--color-pbpages, #111)); }
+.inner { position: relative; display: flex; flex-direction: column; justify-content: center; min-height: inherit; max-width: 1760px; margin: 0 auto; padding: 180px 5.5% 80px; }
+.copy { --scroll: 35px; display: flex; flex-direction: column; align-items: center; width: 43%; margin-left: auto; text-align: center; }
+.heading { margin: 0; font-size: clamp(54px, 5.2vw, 92px); font-weight: 600; line-height: 1.04; letter-spacing: -.065em; }
+.headingLine { display: block; white-space: nowrap; }
+.silver { background: linear-gradient(180deg, #fff 22%, #a3a5a4 100%); background-clip: text; color: transparent; }
+.green, .brackets { color: #20ff00; }
+.brackets { font-family: monospace; font-weight: 600; letter-spacing: -.09em; }
+.tagline { margin: 15px 0 0; font-size: clamp(13px, 1.2vw, 21px); font-style: italic; letter-spacing: -.045em; white-space: nowrap; }
+.award { margin: 40px 0 0; width: fit-content; max-width: 100%; }
+
+@media (hover: hover) { .crackGlow { will-change: transform; } }
+@media (prefers-reduced-motion: reduce) { .crackPulse, .glass, .charge, .hero [data-parallax] { animation: none; } }
+@media (min-width: 1800px) { .copy { width: 45%; } }
+@media (max-width: 1199px) and (min-width: 901px) {
+  .inner { padding-left: 3%; padding-right: 3%; }
+  .copy { width: 48%; }
+  .heading { font-size: clamp(48px, 5.5vw, 66px); }
+}
+@media (max-width: 900px) {
+  .hero { --scene-offset: 76px; --scene-height: 600px; min-height: 0; }
+  .hero::after { height: 96px; }
+  .scene { top: var(--scene-offset); bottom: auto; height: var(--scene-height); overflow: hidden; }
+  .scene::after { content: ""; position: absolute; inset: 0; z-index: 8; background: linear-gradient(180deg, transparent 76%, #030909); }
+  .frame { left: calc(50cqw - 49.6cqh); bottom: 0; height: 100cqh; --th: 60.15cqh; --disc-r: calc(var(--th) * .35); }
+  .cliff img:not(.crackGlow, .crackPulse) { mask-image: linear-gradient(90deg, transparent, #000 14%); }
+  .scrim { background: linear-gradient(180deg, transparent calc(var(--scene-offset) + var(--scene-height) * .75), #030909 calc(var(--scene-offset) + var(--scene-height))); }
+  .inner { justify-content: flex-start; padding: calc(var(--scene-offset) + var(--scene-height) - 60px) 24px 32px; }
+  .copy { width: min(580px, 100%); margin: 0 auto; align-items: center; text-align: center; }
+  .heading { font-size: clamp(42px, 8.4vw, 66px); }
+  .tagline { white-space: normal; font-size: clamp(12px, 2vw, 16px); }
+  .award { margin: 28px 0 0; }
+}
+@media (max-width: 480px) {
+  .hero { --scene-height: 510px; }
+  .inner { padding: calc(var(--scene-offset) + var(--scene-height) - 50px) 18px 32px; }
+  .heading { font-size: clamp(35px, 10.4vw, 49px); }
+  .award { margin-top: 26px; }
+}

@@ -111,7 +111,7 @@ export default function AwardBadge() {
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      className="relative w-full"
+      className="relative w-fit max-w-full"
     >
       {/* glow anchoring the award to the hero */}
       <div
@@ -119,7 +119,7 @@ export default function AwardBadge() {
         className="pointer-events-none absolute left-1/2 top-1/2 h-[150%] w-[min(44rem,100%)] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse_at_center,rgba(55,255,0,0.10),transparent_70%)]"
       />
 
-      <div className="relative mx-auto flex w-full max-w-2xl items-center justify-center gap-1.5 sm:gap-4 lg:gap-5">
+      <div className="relative flex w-fit max-w-full items-center justify-center gap-1.5 sm:gap-4 lg:gap-5">
         <Laurel />
 
         <div className="flex min-w-0 flex-col items-center gap-1.5 text-center sm:gap-2">
